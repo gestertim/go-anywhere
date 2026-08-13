@@ -1,0 +1,1 @@
+-- Local development data is created through authenticated test fixtures.

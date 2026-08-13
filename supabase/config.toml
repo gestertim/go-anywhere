@@ -1,0 +1,13 @@
+project_id = "go-anywhere"
+
+[api]
+enabled = true
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[auth]
+enabled = true
