@@ -31,7 +31,10 @@ export async function createTripAction(_previous: TripActionState, formData: For
     end_date: parsed.data.endDate,
     owner_id: user.id,
   });
-  if (error) return { error: "儲存失敗，你的輸入內容仍保留。" };
+  if (error) {
+    console.error("trip create failed", error);
+    return { error: "儲存失敗，你的輸入內容仍保留。" };
+  }
   revalidatePath("/explore");
   revalidatePath("/trips");
   redirect(`/trips/${tripId}`);
@@ -66,7 +69,10 @@ export async function updateTripAction(_previous: TripActionState, formData: For
     start_date: parsed.data.startDate,
     end_date: parsed.data.endDate,
   }).eq("id", id);
-  if (error) return { error: "儲存失敗，你的輸入內容仍保留。" };
+  if (error) {
+    console.error("trip update failed", error);
+    return { error: "儲存失敗，你的輸入內容仍保留。" };
+  }
   revalidatePath(`/trips/${id}`);
   revalidatePath("/trips");
   redirect(`/trips/${id}`);
