@@ -179,3 +179,11 @@ playwright.config.ts
 - **優雅降級與狀態**：PASS。Mapbox、網路、儲存、載入、空狀態、刪除確認均有明確契約與 quickstart 驗證。
 - **測試**：PASS。單元、整合、RLS 與 Playwright 流程覆蓋憲章要求。
 - **範圍控制**：PASS。未引入離線 mutation sync、AI、社群、付款、協作或公開分享架構。
+
+## T074 Vercel 發布驗證
+
+- Vercel Production deployment：PASS；`main` branch deployment 顯示 `Ready`。
+- Production root entry：PASS；根網址會導向登入頁，未登入保護路由會導向 `/login`。
+- Development Supabase authentication and CRUD：待手動驗證。
+- RLS 跨帳號資料隔離：待手動驗證。
+- Frontend bundle server-only secret scan：待手動驗證；確認 `SUPABASE_SERVICE_ROLE_KEY` 與其他 server-only secrets 未進入公開資產後，再完成 T074。
