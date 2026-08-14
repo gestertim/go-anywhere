@@ -19,25 +19,22 @@ export async function createTripAction(_previous: TripActionState, formData: For
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "請先登入後繼續。" };
+  const tripId = crypto.randomUUID();
   const tripsTable = supabase.from("trips") as unknown as {
-    insert: (values: { owner_id: string; title: string; destination: string; start_date: string; end_date: string }) => {
-      select: (columns: string) => { single: () => Promise<{ data: { id: string } | null; error: unknown }> };
-    };
+    insert: (values: { id: string; owner_id: string; title: string; destination: string; start_date: string; end_date: string }) => Promise<{ error: unknown }>;
   };
-  const { data, error } = await tripsTable
-    .insert({
-      title: parsed.data.title,
-      destination: parsed.data.destination,
-      start_date: parsed.data.startDate,
-      end_date: parsed.data.endDate,
-      owner_id: user.id,
-    })
-    .select("id")
-    .single();
-  if (error || !data) return { error: "儲存失敗，你的輸入內容仍保留。" };
+  const { error } = await tripsTable.insert({
+    id: tripId,
+    title: parsed.data.title,
+    destination: parsed.data.destination,
+    start_date: parsed.data.startDate,
+    end_date: parsed.data.endDate,
+    owner_id: user.id,
+  });
+  if (error) return { error: "儲存失敗，你的輸入內容仍保留。" };
   revalidatePath("/explore");
   revalidatePath("/trips");
-  redirect(`/trips/${data.id}`);
+  redirect(`/trips/${tripId}`);
 }
 
 export async function deleteTripAction(tripId: string) {
