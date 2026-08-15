@@ -39,6 +39,23 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         center: [markers[0].longitude, markers[0].latitude],
         zoom: 11,
       });
+      // Localize labels only after the map has finished its first render so a
+      // bad layer expression can never block the initial tile requests.
+      map.once("idle", () => {
+        map?.getStyle().layers?.forEach((layer) => {
+          if (layer.type !== "symbol" || !layer.layout?.["text-field"]) return;
+          try {
+            map?.setLayoutProperty(layer.id, "text-field", [
+              "coalesce",
+              ["get", "name_zh-Hant"],
+              ["get", "name_zh"],
+              ["get", "name"],
+            ]);
+          } catch (labelError) {
+            console.warn("mapbox label localization skipped for layer", layer.id, labelError);
+          }
+        });
+      });
       map.on("error", (event) => {
         const rawError = event.error as (Error & { status?: number }) | undefined;
         const status = rawError?.status;

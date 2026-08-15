@@ -1,13 +1,18 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 import { createItineraryAction } from "@/features/itinerary/actions";
+import { PlaceSearch } from "@/features/itinerary/components/PlaceSearch";
 import type { ItineraryType } from "@/types/domain";
 
 const labels: Record<ItineraryType, string> = { flight: "航班", accommodation: "住宿", transportation: "交通", attraction: "景點", restaurant: "餐廳", other: "其他" };
 export function ItineraryForm({ tripId, type }: { tripId: string; type: ItineraryType }) {
   const [state, action, pending] = useActionState(createItineraryAction, {});
   const isAccommodation = type === "accommodation";
+  const placeNameRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+  const latitudeRef = useRef<HTMLInputElement>(null);
+  const longitudeRef = useRef<HTMLInputElement>(null);
   return <form action={action}>
     <input type="hidden" name="tripId" value={tripId} /><input type="hidden" name="type" value={type} />
     <p>類型：{labels[type]}</p>
@@ -24,10 +29,11 @@ export function ItineraryForm({ tripId, type }: { tripId: string; type: Itinerar
         <label>結束時間<input name="endTime" type="time" /></label>
       </>
     )}
-    <label>地點名稱<input name="placeName" placeholder="例如：清水寺" /></label>
-    <label>地址<input name="address" /></label>
-    <label>緯度<input name="latitude" type="number" step="any" /></label>
-    <label>經度<input name="longitude" type="number" step="any" /></label>
+    <PlaceSearch placeNameRef={placeNameRef} addressRef={addressRef} latitudeRef={latitudeRef} longitudeRef={longitudeRef} />
+    <label>地點名稱<input ref={placeNameRef} name="placeName" placeholder="例如：清水寺" /></label>
+    <label>地址<input ref={addressRef} name="address" /></label>
+    <label>緯度<input ref={latitudeRef} name="latitude" type="number" step="any" /></label>
+    <label>經度<input ref={longitudeRef} name="longitude" type="number" step="any" /></label>
     <label>備註<textarea name="notes" /></label>
     <fieldset><legend>預訂資訊（選填）</legend><label>供應商<input name="providerName" /></label><label>確認碼<input name="confirmationCode" /></label><label>參考網址<input name="referenceUrl" type="url" /></label><label>預訂備註<textarea name="bookingDetails" /></label></fieldset>
     {state.error ? <p role="alert">{state.error}</p> : null}
