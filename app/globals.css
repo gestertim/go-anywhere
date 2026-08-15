@@ -69,6 +69,24 @@ button:disabled { cursor: wait; opacity: 0.8; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 1.4s; } }
 .auth-alternative { margin-top: 24px; text-align: center; }
+.password-field { display: grid; gap: 8px; color: var(--muted); }
+.password-field-input { position: relative; }
+.password-field-input input { padding-right: 48px; }
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  min-height: 36px;
+  width: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--muted);
+}
+.password-toggle:hover, .password-toggle:focus-visible { color: var(--ink); }
 a { color: var(--ink); }
 article {
   margin: 12px 0;

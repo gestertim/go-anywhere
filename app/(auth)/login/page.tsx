@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { PasswordField } from "@/app/(auth)/PasswordField";
 
 const minimumPendingMs = 600;
 
@@ -44,7 +45,7 @@ export default function LoginPage() {
       <h1>回到你的旅程</h1>
       <form onSubmit={submit}>
         <label>電子信箱<input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
-        <label>密碼<input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
+        <PasswordField label="密碼" autoComplete="current-password" value={password} onChange={setPassword} />
         {error ? <p role="alert">{error}</p> : null}
         <button className="login-submit" type="submit" disabled={pending} aria-busy={pending}>
           {pending ? <><span className="spinner" aria-hidden="true" />登入中…</> : "登入"}
