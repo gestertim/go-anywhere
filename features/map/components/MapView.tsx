@@ -19,11 +19,13 @@ export function MapView({ tripId, date, items }: { tripId: string; date: string;
 function InteractiveMap({ tripId, date, markers }: { tripId: string; date: string; markers: ReturnType<typeof getMarkerItems>; }) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
+  const [reason, setReason] = useState<string>("地圖載入失敗");
 
   useEffect(() => {
     let map: mapboxgl.Map | undefined;
     let cancelled = false;
     if (!("WebGLRenderingContext" in window)) {
+      setReason("此裝置或瀏覽器不支援 WebGL");
       setFailed(true);
       return () => { cancelled = true; };
     }
@@ -36,7 +38,16 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         center: [markers[0].longitude, markers[0].latitude],
         zoom: 11,
       });
-      map.on("error", () => setFailed(true));
+      map.on("error", (event) => {
+        const message = String(event.error?.message ?? "");
+        if (/401|403|unauthorized|forbidden|access token|not authorized|domain|origin/i.test(message)) {
+          setReason("地圖權限設定錯誤，請檢查 Mapbox token 的網域限制");
+        } else {
+          setReason("地圖載入失敗");
+        }
+        console.error("mapbox load error", message || event.error);
+        setFailed(true);
+      });
       markers.forEach((marker) => {
         const link = document.createElement("a");
         link.href = `/trips/${tripId}/items/${marker.id}`;
@@ -44,10 +55,14 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         const popup = new mapbox.Popup({ offset: 20 }).setDOMContent(link);
         new mapbox.Marker().setLngLat([marker.longitude, marker.latitude]).setPopup(popup).addTo(map!);
       });
-    }).catch(() => setFailed(true));
+    }).catch((error) => {
+      console.error("mapbox module import failed", error);
+      setReason("地圖模組載入失敗");
+      setFailed(true);
+    });
     return () => { cancelled = true; map?.remove(); };
   }, [markers, tripId]);
 
-  if (failed) return <MapUnavailableState tripId={tripId} date={date} reason="地圖載入失敗" />;
+  if (failed) return <MapUnavailableState tripId={tripId} date={date} reason={reason} />;
   return <section aria-label="地圖"><div ref={mapContainer} style={{ minHeight: 420 }} />{markers.map((marker) => <Link key={marker.id} href={`/trips/${tripId}/items/${marker.id}`}><span>{marker.order}. {marker.time} · {marker.title}</span></Link>)}</section>;
 }
