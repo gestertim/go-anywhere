@@ -20,6 +20,7 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
   const mapContainer = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
   const [reason, setReason] = useState<string>("地圖載入失敗");
+  const [detail, setDetail] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     let map: mapboxgl.Map | undefined;
@@ -39,12 +40,13 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         zoom: 11,
       });
       map.on("error", (event) => {
-        const message = String(event.error?.message ?? "");
+        const message = String(event.error?.message ?? event.error ?? "");
         if (/401|403|unauthorized|forbidden|access token|not authorized|domain|origin/i.test(message)) {
           setReason("地圖權限設定錯誤，請檢查 Mapbox token 的網域限制");
         } else {
           setReason("地圖載入失敗");
         }
+        setDetail(message || undefined);
         console.error("mapbox load error", message || event.error);
         setFailed(true);
       });
@@ -56,13 +58,15 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         new mapbox.Marker().setLngLat([marker.longitude, marker.latitude]).setPopup(popup).addTo(map!);
       });
     }).catch((error) => {
+      const message = error instanceof Error ? error.message : String(error);
       console.error("mapbox module import failed", error);
       setReason("地圖模組載入失敗");
+      setDetail(message);
       setFailed(true);
     });
     return () => { cancelled = true; map?.remove(); };
   }, [markers, tripId]);
 
-  if (failed) return <MapUnavailableState tripId={tripId} date={date} reason={reason} />;
+  if (failed) return <MapUnavailableState tripId={tripId} date={date} reason={reason} detail={detail} />;
   return <section aria-label="地圖"><div ref={mapContainer} style={{ minHeight: 420 }} />{markers.map((marker) => <Link key={marker.id} href={`/trips/${tripId}/items/${marker.id}`}><span>{marker.order}. {marker.time} · {marker.title}</span></Link>)}</section>;
 }
