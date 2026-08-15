@@ -5,5 +5,5 @@ export function getMapboxToken() {
 }
 
 export function isMapboxAvailable() {
-  return Boolean(getMapboxToken()) && typeof window !== "undefined" && "WebGLRenderingContext" in window;
+  return Boolean(getMapboxToken());
 }

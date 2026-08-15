@@ -23,6 +23,10 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
   useEffect(() => {
     let map: mapboxgl.Map | undefined;
     let cancelled = false;
+    if (!("WebGLRenderingContext" in window)) {
+      setFailed(true);
+      return () => { cancelled = true; };
+    }
     void import("mapbox-gl").then(({ default: mapbox }) => {
       if (cancelled || !mapContainer.current) return;
       mapbox.accessToken = getMapboxToken() ?? "";
