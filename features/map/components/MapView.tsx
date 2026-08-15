@@ -35,7 +35,7 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
       mapbox.accessToken = getMapboxToken() ?? "";
       map = new mapbox.Map({
         container: mapContainer.current,
-        style: "mapbox://styles/mapbox/streets-v12",
+        style: "mapbox://styles/mapbox/streets-zh-v12",
         center: [markers[0].longitude, markers[0].latitude],
         zoom: 11,
       });
