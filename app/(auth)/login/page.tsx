@@ -22,8 +22,13 @@ export default function LoginPage() {
       const result = await supabase.auth.signInWithPassword({ email, password });
       const remainingMs = minimumPendingMs - (performance.now() - startedAt);
       if (remainingMs > 0) await new Promise((resolve) => setTimeout(resolve, remainingMs));
-      if (result.error) setError("登入失敗，請確認帳號與密碼。");
-      else window.location.assign("/explore");
+      if (result.error?.code === "email_not_confirmed") {
+        setError("電子信箱尚未驗證，請先開啟驗證信完成確認。");
+      } else if (result.error) {
+        setError("登入失敗，請確認帳號與密碼。");
+      } else {
+        window.location.assign("/explore");
+      }
     } catch {
       const remainingMs = minimumPendingMs - (performance.now() - startedAt);
       if (remainingMs > 0) await new Promise((resolve) => setTimeout(resolve, remainingMs));
