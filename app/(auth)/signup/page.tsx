@@ -11,6 +11,14 @@ async function waitForMinimumPending(startedAt: number) {
   if (remainingMs > 0) await new Promise((resolve) => setTimeout(resolve, remainingMs));
 }
 
+function signupErrorMessage(code?: string) {
+  if (code === "over_email_send_rate_limit") return "驗證信寄送次數已達上限，請稍後再試。";
+  if (code === "user_already_exists") return "此電子信箱已註冊，請返回登入。";
+  if (code === "weak_password") return "密碼強度不足，請改用更安全的密碼。";
+  if (code === "signup_disabled") return "目前暫停開放註冊。";
+  return "註冊失敗，請確認電子信箱與密碼後再試。";
+}
+
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +49,7 @@ export default function SignupPage() {
       await waitForMinimumPending(startedAt);
 
       if (result.error) {
-        setError("註冊失敗，請確認電子信箱與密碼後再試。");
+        setError(signupErrorMessage(result.error.code));
       } else if (result.data.session) {
         window.location.assign("/explore");
       } else {
