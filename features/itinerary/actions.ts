@@ -28,10 +28,15 @@ function readBooking(formData: FormData) {
   };
 }
 
+function readTime(formData: FormData, name: string) {
+  const value = String(formData.get(name) ?? "").trim();
+  return value ? value.slice(0, 5) : null;
+}
+
 export async function createItineraryAction(_previous: ItineraryActionState, formData: FormData): Promise<ItineraryActionState> {
   const parsed = createItineraryItemSchema.safeParse({
     type: formData.get("type"), title: formData.get("title") || null, date: formData.get("date") || null, endDate: formData.get("endDate") || null,
-    startTime: formData.get("startTime") || null, endTime: formData.get("endTime") || null,
+    startTime: readTime(formData, "startTime"), endTime: readTime(formData, "endTime"),
     place: readPlace(formData),
     notes: formData.get("notes") || null,
   });
@@ -76,8 +81,8 @@ export async function updateItineraryAction(_previous: ItineraryActionState, for
     title: formData.get("title") || null,
     date: formData.get("date") || null,
     endDate: formData.get("endDate") || null,
-    startTime: formData.get("startTime") || null,
-    endTime: formData.get("endTime") || null,
+    startTime: readTime(formData, "startTime"),
+    endTime: readTime(formData, "endTime"),
     place: readPlace(formData),
     notes: formData.get("notes") || null,
   });

@@ -3,7 +3,7 @@ import { itineraryTypes } from "@/types/domain";
 
 export const uuidSchema = z.string().uuid();
 export const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "請輸入有效日期");
-export const timeSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "請輸入有效時間");
+export const timeSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/, "請輸入有效時間");
 export const itineraryTypeSchema = z.enum(itineraryTypes);
 
 const coordinateFields = {

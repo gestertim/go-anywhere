@@ -27,4 +27,15 @@ describe("domain validation", () => {
   it("allows partially completed itinerary items", () => {
     expect(itineraryItemSchema.safeParse({ type: "attraction" }).success).toBe(true);
   });
+
+  it("accepts PostgreSQL times with seconds", () => {
+    expect(
+      itineraryItemSchema.safeParse({
+        type: "flight",
+        date: "2026-10-09",
+        startTime: "09:00:00",
+        endTime: "13:25:00",
+      }).success,
+    ).toBe(true);
+  });
 });
