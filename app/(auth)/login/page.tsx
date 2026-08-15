@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
+const minimumPendingMs = 600;
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,14 +13,19 @@ export default function LoginPage() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const startedAt = performance.now();
     setPending(true);
     setError(null);
     try {
       const supabase = createSupabaseBrowserClient();
       const result = await supabase.auth.signInWithPassword({ email, password });
+      const remainingMs = minimumPendingMs - (performance.now() - startedAt);
+      if (remainingMs > 0) await new Promise((resolve) => setTimeout(resolve, remainingMs));
       if (result.error) setError("登入失敗，請確認帳號與密碼。");
       else window.location.assign("/explore");
     } catch {
+      const remainingMs = minimumPendingMs - (performance.now() - startedAt);
+      if (remainingMs > 0) await new Promise((resolve) => setTimeout(resolve, remainingMs));
       setError("登入失敗，請稍後再試。");
     } finally {
       setPending(false);
