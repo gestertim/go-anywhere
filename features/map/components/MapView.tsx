@@ -39,18 +39,6 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         center: [markers[0].longitude, markers[0].latitude],
         zoom: 11,
       });
-      map.once("style.load", () => {
-        map?.getStyle().layers?.forEach((layer) => {
-          if (layer.type === "symbol" && layer.layout?.["text-field"]) {
-            map?.setLayoutProperty(layer.id, "text-field", [
-              "coalesce",
-              ["get", "name_zh-Hant"],
-              ["get", "name_zh"],
-              ["get", "name"],
-            ]);
-          }
-        });
-      });
       map.on("error", (event) => {
         const rawError = event.error as (Error & { status?: number }) | undefined;
         const status = rawError?.status;
