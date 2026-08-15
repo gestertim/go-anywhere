@@ -68,6 +68,7 @@ button:disabled { cursor: wait; opacity: 0.8; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 1.4s; } }
+.auth-alternative { margin-top: 24px; text-align: center; }
 a { color: var(--ink); }
 article {
   margin: 12px 0;
