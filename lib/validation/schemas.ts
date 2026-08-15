@@ -43,6 +43,7 @@ export const itineraryItemFields = {
   type: itineraryTypeSchema,
   title: z.string().trim().max(160).nullable().optional(),
   date: dateSchema.nullable().optional(),
+  endDate: dateSchema.nullable().optional(),
   startTime: timeSchema.nullable().optional(),
   endTime: timeSchema.nullable().optional(),
   place: placeSchema.nullable().optional(),
@@ -54,4 +55,8 @@ export const itineraryItemSchema = z
   .refine(({ startTime, endTime }) => !startTime || !endTime || startTime <= endTime, {
     path: ["endTime"],
     message: "結束時間不可早於開始時間",
+  })
+  .refine(({ date, endDate }) => !endDate || !date || date <= endDate, {
+    path: ["endDate"],
+    message: "退房日期不可早於入住日期",
   });

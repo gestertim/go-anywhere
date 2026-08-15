@@ -6,7 +6,7 @@ function toItem(row: Record<string, unknown>): ItineraryItem {
   const booking = row.booking as Record<string, unknown> | null;
   return {
     id: String(row.id), tripId: String(row.trip_id), type: row.type as ItineraryType,
-    title: row.title as string | null, date: row.date as string | null,
+    title: row.title as string | null, date: row.date as string | null, endDate: row.end_date as string | null,
     startTime: row.start_time as string | null, endTime: row.end_time as string | null,
     place: place ? { id: String(place.id), name: place.name as string | null, address: place.address as string | null, latitude: place.latitude as number | null, longitude: place.longitude as number | null } satisfies Place : null,
     notes: row.notes as string | null,

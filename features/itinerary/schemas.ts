@@ -12,7 +12,12 @@ const withTimeRange = <Schema extends z.ZodTypeAny>(schema: Schema) => schema.su
 });
 
 export const flightSchema = withTimeRange(commonItineraryFields.extend({ type: z.literal("flight") }));
-export const accommodationSchema = withTimeRange(commonItineraryFields.extend({ type: z.literal("accommodation") }));
+export const accommodationSchema = withTimeRange(commonItineraryFields.extend({ type: z.literal("accommodation") })).superRefine((value, context) => {
+	const item = value as { date?: string | null; endDate?: string | null };
+	if (item.date && item.endDate && item.endDate < item.date) {
+		context.addIssue({ code: z.ZodIssueCode.custom, path: ["endDate"], message: "退房日期不可早於入住日期" });
+	}
+});
 export const transportationSchema = withTimeRange(commonItineraryFields.extend({ type: z.literal("transportation") }));
 export const attractionSchema = withTimeRange(commonItineraryFields.extend({ type: z.literal("attraction") }));
 export const restaurantSchema = withTimeRange(commonItineraryFields.extend({ type: z.literal("restaurant") }));

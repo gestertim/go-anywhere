@@ -30,7 +30,7 @@ function readBooking(formData: FormData) {
 
 export async function createItineraryAction(_previous: ItineraryActionState, formData: FormData): Promise<ItineraryActionState> {
   const parsed = createItineraryItemSchema.safeParse({
-    type: formData.get("type"), title: formData.get("title") || null, date: formData.get("date") || null,
+    type: formData.get("type"), title: formData.get("title") || null, date: formData.get("date") || null, endDate: formData.get("endDate") || null,
     startTime: formData.get("startTime") || null, endTime: formData.get("endTime") || null,
     place: readPlace(formData),
     notes: formData.get("notes") || null,
@@ -40,7 +40,7 @@ export async function createItineraryAction(_previous: ItineraryActionState, for
   const supabase = await createSupabaseServerClient();
   const places = supabase.from("places") as unknown as Table;
   const items = supabase.from("itinerary_items") as unknown as Table;
-  const result = await items.insert({ trip_id: tripId, type: parsed.data.type, title: parsed.data.title ?? null, date: parsed.data.date ?? null, start_time: parsed.data.startTime ?? null, end_time: parsed.data.endTime ?? null, place_id: null, notes: parsed.data.notes ?? null }).select("id").single();
+  const result = await items.insert({ trip_id: tripId, type: parsed.data.type, title: parsed.data.title ?? null, date: parsed.data.date ?? null, end_date: parsed.data.endDate ?? null, start_time: parsed.data.startTime ?? null, end_time: parsed.data.endTime ?? null, place_id: null, notes: parsed.data.notes ?? null }).select("id").single();
   if (result.error || !result.data) return { error: "儲存失敗，你的輸入內容仍保留。" };
   const itemId = String(result.data.id);
   if (parsed.data.place && (parsed.data.place.name || parsed.data.place.address || parsed.data.place.latitude != null)) {
@@ -75,6 +75,7 @@ export async function updateItineraryAction(_previous: ItineraryActionState, for
     type: "other",
     title: formData.get("title") || null,
     date: formData.get("date") || null,
+    endDate: formData.get("endDate") || null,
     startTime: formData.get("startTime") || null,
     endTime: formData.get("endTime") || null,
     place: readPlace(formData),
@@ -97,7 +98,7 @@ export async function updateItineraryAction(_previous: ItineraryActionState, for
     }
   }
   const items = supabase.from("itinerary_items") as unknown as Table;
-  const { error } = await items.update({ title: parsed.data.title ?? null, date: parsed.data.date ?? null, start_time: parsed.data.startTime ?? null, end_time: parsed.data.endTime ?? null, place_id: placeId, notes: parsed.data.notes ?? null }).eq("id", itemId);
+  const { error } = await items.update({ title: parsed.data.title ?? null, date: parsed.data.date ?? null, end_date: parsed.data.endDate ?? null, start_time: parsed.data.startTime ?? null, end_time: parsed.data.endTime ?? null, place_id: placeId, notes: parsed.data.notes ?? null }).eq("id", itemId);
   if (error) return { error: "儲存失敗，你的輸入內容仍保留。" };
   const booking = readBooking(formData);
   if (booking.providerName || booking.confirmationCode || booking.referenceUrl || booking.details) {

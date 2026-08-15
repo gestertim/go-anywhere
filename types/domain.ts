@@ -32,6 +32,7 @@ export type ItineraryItem = {
   type: ItineraryType;
   title: string | null;
   date: string | null;
+  endDate: string | null;
   startTime: string | null;
   endTime: string | null;
   place: Place | null;

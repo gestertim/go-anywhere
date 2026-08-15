@@ -7,13 +7,23 @@ import type { ItineraryType } from "@/types/domain";
 const labels: Record<ItineraryType, string> = { flight: "航班", accommodation: "住宿", transportation: "交通", attraction: "景點", restaurant: "餐廳", other: "其他" };
 export function ItineraryForm({ tripId, type }: { tripId: string; type: ItineraryType }) {
   const [state, action, pending] = useActionState(createItineraryAction, {});
+  const isAccommodation = type === "accommodation";
   return <form action={action}>
     <input type="hidden" name="tripId" value={tripId} /><input type="hidden" name="type" value={type} />
     <p>類型：{labels[type]}</p>
     <label>標題<input name="title" placeholder="例如：清水寺散步" /></label>
-    <label>日期<input name="date" type="date" /></label>
-    <label>開始時間<input name="startTime" type="time" /></label>
-    <label>結束時間<input name="endTime" type="time" /></label>
+    {isAccommodation ? (
+      <>
+        <label>入住日期<input name="date" type="date" /></label>
+        <label>退房日期<input name="endDate" type="date" /></label>
+      </>
+    ) : (
+      <>
+        <label>日期<input name="date" type="date" /></label>
+        <label>開始時間<input name="startTime" type="time" /></label>
+        <label>結束時間<input name="endTime" type="time" /></label>
+      </>
+    )}
     <label>地點名稱<input name="placeName" placeholder="例如：清水寺" /></label>
     <label>地址<input name="address" /></label>
     <label>緯度<input name="latitude" type="number" step="any" /></label>
