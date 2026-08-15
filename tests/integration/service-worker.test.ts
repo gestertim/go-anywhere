@@ -8,9 +8,15 @@ const serviceWorker = readFileSync(resolve(process.cwd(), "public/sw.js"), "utf8
 describe("service worker cache contract", () => {
   it("uses a versioned static shell cache", () => {
     expect(staticCacheName).toMatch(/^go-anywhere-shell-v\d+$/);
-    expect(staticAssets).toContain("/");
+    expect(staticAssets).not.toContain("/");
     expect(staticAssets).toContain("/manifest.webmanifest");
     expect(staticAssets.some((asset) => asset.startsWith("/api/"))).toBe(false);
+  });
+
+  it("removes obsolete app caches when a new worker activates", () => {
+    expect(serviceWorker).toContain('self.addEventListener("activate"');
+    expect(serviceWorker).toContain('name.startsWith("go-anywhere-")');
+    expect(serviceWorker).toContain("self.clients.claim()");
   });
 
   it("only handles GET requests for explicit static assets", () => {
