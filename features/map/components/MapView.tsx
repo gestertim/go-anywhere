@@ -35,9 +35,21 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
       mapbox.accessToken = getMapboxToken() ?? "";
       map = new mapbox.Map({
         container: mapContainer.current,
-        style: "mapbox://styles/mapbox/streets-zh-v12",
+        style: "mapbox://styles/mapbox/streets-v12",
         center: [markers[0].longitude, markers[0].latitude],
         zoom: 11,
+      });
+      map.once("style.load", () => {
+        map?.getStyle().layers?.forEach((layer) => {
+          if (layer.type === "symbol" && layer.layout?.["text-field"]) {
+            map?.setLayoutProperty(layer.id, "text-field", [
+              "coalesce",
+              ["get", "name_zh-Hant"],
+              ["get", "name_zh"],
+              ["get", "name"],
+            ]);
+          }
+        });
       });
       map.on("error", (event) => {
         const rawError = event.error as (Error & { status?: number }) | undefined;
