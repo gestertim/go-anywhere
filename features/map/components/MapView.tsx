@@ -40,14 +40,16 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
         zoom: 11,
       });
       map.on("error", (event) => {
-        const message = String(event.error?.message ?? event.error ?? "");
-        if (/401|403|unauthorized|forbidden|access token|not authorized|domain|origin/i.test(message)) {
+        const rawError = event.error as (Error & { status?: number }) | undefined;
+        const status = rawError?.status;
+        const message = String(rawError?.message ?? rawError ?? "");
+        if (status === 401 || status === 403 || /401|403|unauthorized|forbidden|access token|not authorized|domain|origin/i.test(message)) {
           setReason("地圖權限設定錯誤，請檢查 Mapbox token 的網域限制");
         } else {
           setReason("地圖載入失敗");
         }
-        setDetail(message || undefined);
-        console.error("mapbox load error", message || event.error);
+        setDetail(status ? `HTTP ${status}${message ? ` - ${message}` : ""}` : message || undefined);
+        console.error("mapbox load error", status, message || rawError);
         setFailed(true);
       });
       markers.forEach((marker) => {
