@@ -171,7 +171,7 @@
 - [X] T071 [P] 建立 `lib/sentry/` 的 release/environment 設定與錯誤事件 scrub 測試，確認旅程標題、地址、筆記、Booking confirmation code 不會被送出
 - [X] T072 執行 `pnpm lint`、`pnpm test`、`pnpm test:integration`、`pnpm test:e2e` 與 `pnpm build`，修正與本功能相關的失敗並記錄結果於 `specs/001-go-anywhere/quickstart.md`
 - [X] T073 [P] 更新 `README.md`、`.env.example` 與 `specs/001-go-anywhere/quickstart.md`，補充 development/production Supabase 分離、Mapbox origin restriction、Vercel、Sentry 與不支援離線 mutation sync 的操作說明
-- [ ] T074 在 Vercel Preview 以 development Supabase 驗證部署設定，再檢查 `NEXT_PUBLIC_*` bundle 不含 server-only secrets 並記錄發布前憲章合規結果於 `specs/001-go-anywhere/plan.md`
+- [X] T074 在 Vercel Preview 以 development Supabase 驗證部署設定，再檢查 `NEXT_PUBLIC_*` bundle 不含 server-only secrets 並記錄發布前憲章合規結果於 `specs/001-go-anywhere/plan.md`
 - [X] T075 [P] 建立 `tests/e2e/acceptance-timing.spec.ts`，以固定手機 viewport、測試資料與起訖事件量測 SC-001 的 2 分鐘旅程建立與 SC-002 的 90 秒行程建立門檻
 - [X] T076 [P] 建立 `tests/usability/acceptance-protocol.md`，依 spec.md 的驗收協議定義至少 10 位受測者、任務成功判定、測試裝置、外部協助規則與 95%/90% 通過計算方式
 - [X] T077 [P] 建立 `tests/usability/results-template.md`，記錄每輪 Timeline/Map 日期保留與下一行程時間/地點查找結果，支援發布前重現 SC-004 與 SC-008

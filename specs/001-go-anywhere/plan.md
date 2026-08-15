@@ -184,6 +184,7 @@ playwright.config.ts
 
 - Vercel Production deployment：PASS；`main` branch deployment 顯示 `Ready`。
 - Production root entry：PASS；根網址會導向登入頁，未登入保護路由會導向 `/login`。
-- Development Supabase authentication and CRUD：待手動驗證。
-- RLS 跨帳號資料隔離：待手動驗證。
-- Frontend bundle server-only secret scan：待手動驗證；確認 `SUPABASE_SERVICE_ROLE_KEY` 與其他 server-only secrets 未進入公開資產後，再完成 T074。
+- Development Supabase authentication and CRUD：PASS；雲端登入及旅程建立、持久化與詳情導向已驗證。
+- RLS 跨帳號資料隔離：PASS；雲端整合測試確認五張私有資料表只允許 owner 存取。
+- Frontend bundle server-only secret scan：PASS；`.next/static` 對 server-only 實際值及敏感變數名稱均為 0 命中。
+- 發布前憲章合規：PASS；RLS 維持唯一授權邊界，server-only secrets 未進入瀏覽器資產，Vercel 與 development Supabase 整合可用。
