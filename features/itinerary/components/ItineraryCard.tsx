@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ItineraryItem, ItineraryType } from "@/types/domain";
+import styles from "@/features/itinerary/timeline.module.css";
 
 const labels: Record<ItineraryType, string> = { flight: "航班", accommodation: "住宿", transportation: "交通", attraction: "景點", restaurant: "餐廳", other: "其他" };
 
@@ -21,29 +22,29 @@ function TypeIcon({ type }: { type: ItineraryType }) {
 }
 
 function PinIcon() {
-  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="tl-pin"><path d="M12 21s6-5.4 6-10A6 6 0 0 0 6 11c0 4.6 6 10 6 10Z" stroke="currentColor" strokeWidth="1.7" /><circle cx="12" cy="11" r="2" stroke="currentColor" strokeWidth="1.7" /></svg>;
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={styles.pin}><path d="M12 21s6-5.4 6-10A6 6 0 0 0 6 11c0 4.6 6 10 6 10Z" stroke="currentColor" strokeWidth="1.7" /><circle cx="12" cy="11" r="2" stroke="currentColor" strokeWidth="1.7" /></svg>;
 }
 
 export function ItineraryCard({ item }: { item: ItineraryItem }) {
   const hasBooking = Boolean(item.booking && (item.booking.providerName || item.booking.confirmationCode || item.booking.referenceUrl || item.booking.details));
   return (
-    <li className="tl-item" data-type={item.type}>
-      <div className="tl-rail">
-        <div className="tl-times">
-          <span className="tl-start">{item.startTime ?? "待補"}</span>
-          {item.endTime ? <span className="tl-end">{item.endTime}</span> : null}
+    <li className={styles.item} data-type={item.type}>
+      <div className={styles.rail}>
+        <div className={styles.times}>
+          <span className={styles.start}>{item.startTime ?? "待補"}</span>
+          {item.endTime ? <span className={styles.end}>{item.endTime}</span> : null}
         </div>
-        <span className="tl-marker"><TypeIcon type={item.type} /></span>
+        <span className={styles.marker}><TypeIcon type={item.type} /></span>
       </div>
-      <Link className="tl-card" href={`/trips/${item.tripId}/items/${item.id}`}>
-        <div className="tl-card-top">
-          <span className="tl-type">{labels[item.type]}</span>
-          {hasBooking ? <span className="tl-badge">已預訂</span> : null}
+      <Link className={styles.card} href={`/trips/${item.tripId}/items/${item.id}`}>
+        <div className={styles.cardTop}>
+          <span className={styles.type}>{labels[item.type]}</span>
+          {hasBooking ? <span className={styles.badge}>已預訂</span> : null}
         </div>
-        <h3>{item.title || "未命名行程"}</h3>
-        {item.booking?.providerName ? <p className="tl-provider">{item.booking.providerName}</p> : null}
-        <p className="tl-place"><PinIcon />{item.place?.name || "尚未設定地點"}</p>
-        {item.place?.address ? <p className="tl-addr">{item.place.address}</p> : null}
+        <h3 className={styles.cardTitle}>{item.title || "未命名行程"}</h3>
+        {item.booking?.providerName ? <p className={styles.provider}>{item.booking.providerName}</p> : null}
+        <p className={styles.place}><PinIcon />{item.place?.name || "尚未設定地點"}</p>
+        {item.place?.address ? <p className={styles.addr}>{item.place.address}</p> : null}
       </Link>
     </li>
   );

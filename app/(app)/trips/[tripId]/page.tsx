@@ -11,6 +11,7 @@ import { BookingList } from "@/features/bookings/components/BookingList";
 import { NoteEditor } from "@/features/notes/components/NoteEditor";
 import { getTripNote } from "@/features/notes/queries";
 import { DeleteTripButton } from "@/features/trips/components/DeleteTripButton";
+import styles from "@/features/itinerary/timeline.module.css";
 
 function TimelineTabIcon() {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="6" cy="7" r="2" stroke="currentColor" strokeWidth="1.8" /><circle cx="6" cy="17" r="2" stroke="currentColor" strokeWidth="1.8" /><path d="M6 9v6M11 7h8M11 17h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>;
@@ -42,25 +43,27 @@ export default async function TripWorkspacePage({ params, searchParams }: { para
     return `/trips/${trip.id}?${params.toString()}`;
   };
   return (
-    <main className="trip-detail">
-      <Link href="/trips">返回行程</Link>
-      <header className="trip-hero">
-        <div className="trip-hero-content">
-          <p className="trip-hero-dest">{trip.destination}</p>
-          <h1>{trip.title}</h1>
-          <p className="trip-hero-dates">{trip.startDate} 至 {trip.endDate}</p>
+    <main className={styles.page}>
+      <Link className={styles.backLink} href="/trips">返回行程</Link>
+      <header className={styles.hero}>
+        <div className={styles.heroContent}>
+          <p className={styles.heroDest}>{trip.destination}</p>
+          <h1 className={styles.heroTitle}>{trip.title}</h1>
+          <p className={styles.heroDates}>{trip.startDate} 至 {trip.endDate}</p>
         </div>
       </header>
-      <nav aria-label="旅程檢視">
+      <nav className={styles.viewTabs} aria-label="旅程檢視">
         <Link aria-current={view === "timeline" ? "page" : undefined} href={withView("timeline")}><TimelineTabIcon /><span>時間軸</span></Link>
         <Link aria-current={view === "map" ? "page" : undefined} href={withView("map")}><MapTabIcon /><span>地圖</span></Link>
         <Link aria-current={view === "bookings" ? "page" : undefined} href={withView("bookings")}><BookingsTabIcon /><span>預訂</span></Link>
         <Link aria-current={view === "notes" ? "page" : undefined} href={withView("notes")}><NotesTabIcon /><span>筆記</span></Link>
       </nav>
-        {view === "timeline" ? <><DateSwitcher tripId={trip.id} startDate={trip.startDate} endDate={trip.endDate} activeDate={activeDate ?? trip.startDate} /><DaySummary activeDate={activeDate ?? trip.startDate} itemCount={items.filter((item) => item.date === (activeDate ?? trip.startDate) || (item.type === "accommodation" && item.date && item.endDate && item.date <= (activeDate ?? trip.startDate) && (activeDate ?? trip.startDate) <= item.endDate)).length} /><Timeline tripId={trip.id} items={items} activeDate={activeDate ?? trip.startDate} /></> : view === "map" ? <><DateSwitcher tripId={trip.id} startDate={trip.startDate} endDate={trip.endDate} activeDate={activeDate ?? trip.startDate} /><MapView tripId={trip.id} date={activeDate ?? trip.startDate} items={items} /></> : view === "bookings" ? <BookingList items={items} /> : view === "notes" ? <NoteEditor tripId={trip.id} content={note?.content ?? ""} /> : <section><h2>找不到這個檢視</h2><Link href={`/trips/${trip.id}?view=timeline&date=${activeDate ?? trip.startDate}`}>回到時間軸</Link></section>}
-      <Link href={`/trips/${trip.id}/items/new`}>新增行程</Link>
-      <Link href={`/trips/${trip.id}/settings`}>編輯旅程</Link>
-      <DeleteTripButton tripId={trip.id} title={trip.title} />
+        {view === "timeline" ? <><DateSwitcher tripId={trip.id} startDate={trip.startDate} endDate={trip.endDate} activeDate={activeDate ?? trip.startDate} /><DaySummary activeDate={activeDate ?? trip.startDate} itemCount={items.filter((item) => item.date === (activeDate ?? trip.startDate) || (item.type === "accommodation" && item.date && item.endDate && item.date <= (activeDate ?? trip.startDate) && (activeDate ?? trip.startDate) <= item.endDate)).length} /><Timeline tripId={trip.id} items={items} activeDate={activeDate ?? trip.startDate} /></> : view === "map" ? <><DateSwitcher tripId={trip.id} startDate={trip.startDate} endDate={trip.endDate} activeDate={activeDate ?? trip.startDate} /><MapView tripId={trip.id} date={activeDate ?? trip.startDate} items={items} /></> : view === "bookings" ? <BookingList items={items} /> : view === "notes" ? <NoteEditor tripId={trip.id} content={note?.content ?? ""} /> : <section className={styles.fallback}><h2>找不到這個檢視</h2><Link href={`/trips/${trip.id}?view=timeline&date=${activeDate ?? trip.startDate}`}>回到時間軸</Link></section>}
+      <div className={styles.actions}>
+        <Link className={styles.actionPrimary} href={`/trips/${trip.id}/items/new`}>新增行程</Link>
+        <Link className={styles.actionSecondary} href={`/trips/${trip.id}/settings`}>編輯旅程</Link>
+        <DeleteTripButton tripId={trip.id} title={trip.title} />
+      </div>
     </main>
   );
 }

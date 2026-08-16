@@ -1,0 +1,464 @@
+/* Trip detail / timeline page — fully page-scoped styles.
+   Every rule is nested under .page so it overrides the older global
+   rules for this screen without touching globals.css, and cannot leak
+   to Mapbox, forms, modals, or other routes. Design tokens are only
+   referenced (never redefined) to stay aligned with the design system. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Back link ---------- */
+.page .backLink {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 7px 14px 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+.page .backLink::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+.page .backLink:hover {
+  color: var(--accent-strong);
+  border-color: var(--accent-soft);
+}
+
+/* ---------- Hero ---------- */
+.page .hero {
+  position: relative;
+  margin: 0 0 16px;
+  padding: 22px 20px 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(135deg, #1558c0 0%, #1f6feb 48%, #38bdf8 100%);
+  color: #fff;
+  box-shadow: 0 14px 34px rgba(31, 111, 235, 0.26);
+}
+.page .hero::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+.page .heroContent {
+  position: relative;
+  z-index: 1;
+}
+.page .heroDest {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.page .heroTitle {
+  margin: 6px 0 12px;
+  color: #fff;
+  font-size: clamp(1.5rem, 5.4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.page .heroDates {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+/* ---------- View tabs (icon-led segmented) ---------- */
+.page .viewTabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.page .viewTabs a {
+  flex: 1 1 0;
+  min-height: 58px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.page .viewTabs a svg {
+  width: 22px;
+  height: 22px;
+}
+.page .viewTabs a:hover {
+  color: var(--accent-strong);
+}
+.page .viewTabs a[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* ---------- Date switcher (scrollable pills) ---------- */
+.page .dateNav {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 2px 2px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.page .dateNav::-webkit-scrollbar {
+  display: none;
+}
+.page .dateNav a {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 62px;
+  min-height: 60px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+.page .dsMd {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.page .dsWd {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.page .dateNav a[aria-current="date"] {
+  border-color: transparent;
+  background: var(--brand-grad);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(31, 111, 235, 0.28);
+}
+.page .dateNav a[aria-current="date"] .dsMd {
+  color: #fff;
+}
+
+/* ---------- Day summary ---------- */
+.page .daySummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+.page .daySummaryText {
+  display: grid;
+  gap: 2px;
+}
+.page .daySummaryText p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.page .daySummaryText h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.page .dayCount {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* ---------- Timeline ---------- */
+.page .timeline {
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+}
+.page .item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+.page .item:last-child {
+  padding-bottom: 4px;
+}
+.page .item::before {
+  content: "";
+  position: absolute;
+  left: 26px;
+  top: 8px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--line);
+}
+.page .item:last-child::before {
+  display: none;
+}
+.page .rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.page .times {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.page .start {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.page .end {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.page .marker {
+  position: relative;
+  z-index: 1;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--muted);
+  box-shadow: 0 4px 10px rgba(15, 35, 64, 0.18);
+}
+.page .marker svg {
+  width: 19px;
+  height: 19px;
+}
+.page .item[data-type="flight"] .marker { background: #ef4f7a; }
+.page .item[data-type="accommodation"] .marker { background: #2f76e6; }
+.page .item[data-type="transportation"] .marker { background: #13a4a4; }
+.page .item[data-type="attraction"] .marker { background: #22a45d; }
+.page .item[data-type="restaurant"] .marker { background: #f08a24; }
+.page .item[data-type="other"] .marker { background: #7c6cf0; }
+
+/* ---------- Itinerary card ---------- */
+.page .card {
+  display: block;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.page .card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #cfe0fb;
+}
+.page .cardTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.page .type {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.page .item[data-type="flight"] .type { background: #fdeaf0; color: #d63b67; }
+.page .item[data-type="accommodation"] .type { background: #e7f0ff; color: #1f5fd0; }
+.page .item[data-type="transportation"] .type { background: #e0f5f5; color: #0d7f7f; }
+.page .item[data-type="attraction"] .type { background: #e5f6ec; color: #1c8f52; }
+.page .item[data-type="restaurant"] .type { background: #fdf0e2; color: #cf7415; }
+.page .item[data-type="other"] .type { background: #efedfd; color: #5a4ad1; }
+.page .badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: #e7f6ee;
+  color: var(--success);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.page .cardTitle {
+  margin: 4px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.page .provider {
+  margin: 0 0 2px;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.page .place {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+.page .pin {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+.page .addr {
+  margin: 3px 0 0 19px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ---------- Empty / fallback ---------- */
+.page .empty,
+.page .fallback {
+  margin: 4px 0 8px;
+  padding: 28px 20px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+}
+.page .empty h2,
+.page .fallback h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.page .empty p {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+.page .empty a,
+.page .fallback a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-grad);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(31, 111, 235, 0.24);
+}
+
+/* ---------- Bottom actions ---------- */
+.page .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.page .actionPrimary {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-grad);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(31, 111, 235, 0.24);
+}
+.page .actionSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.page .actionSecondary:hover {
+  border-color: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+@media (min-width: 560px) {
+  .page .dateNav a {
+    min-width: 72px;
+  }
+}
