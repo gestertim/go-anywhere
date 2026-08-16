@@ -109,6 +109,32 @@ main > a:first-child::before {
 }
 main > a:first-child:hover { color: var(--ink); }
 
+/* ---------- Itinerary type picker ---------- */
+.type-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.type-picker > a {
+  display: inline-flex;
+  flex: 1 1 40%;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+.type-picker > a:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+
 /* ---------- Cards ---------- */
 /* Grid container wrapping card links */
 main > div:has(> a > article),
@@ -455,12 +481,15 @@ nav[aria-label="旅程日期"] a[aria-current="date"] {
 section[aria-label="地圖"] {
   display: grid;
   gap: 8px;
+  justify-items: stretch;
   padding: 0;
   border: 0;
   background: transparent;
   box-shadow: none;
 }
 section[aria-label="地圖"] > div {
+  width: 100%;
+  min-width: 0;
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--line);

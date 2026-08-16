@@ -56,7 +56,7 @@ const links: NavLink[] = [
   { label: "行程", href: "/trips", Icon: SuitcaseIcon },
   { label: "新增", href: "/trips/new", Icon: PlusIcon, accent: true },
   { label: "預訂", href: "/bookings", Icon: TicketIcon },
-  { label: "我的", href: "/settings", Icon: UserIcon },
+  { label: "帳戶", href: "/settings", Icon: UserIcon },
 ];
 
 function isActive(pathname: string | null, href: string) {
