@@ -1,3 +1,3 @@
 export function DaySummary({ activeDate, itemCount }: { activeDate: string; itemCount: number }) {
-  return <header><p>目前日期</p><h2>{activeDate}</h2><p>{itemCount} 個行程</p></header>;
+  return <header className="day-summary"><div><p>行程時間軸</p><h2>{activeDate}</h2></div><span className="day-count">{itemCount} 個行程</span></header>;
 }
