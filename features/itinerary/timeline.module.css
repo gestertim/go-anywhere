@@ -409,7 +409,7 @@
   min-height: 42px;
   padding: 0 18px;
   border-radius: var(--radius-pill);
-  background: var(--brand-grad);
+  background: linear-gradient(135deg, var(--brand-strong), var(--brand));
   color: #fff;
   font-weight: 700;
   text-decoration: none;
@@ -433,7 +433,7 @@
   min-height: 48px;
   padding: 0 20px;
   border-radius: var(--radius-pill);
-  background: var(--brand-grad);
+  background: linear-gradient(135deg, var(--brand-strong), var(--brand));
   color: #fff;
   font-weight: 700;
   text-decoration: none;
