@@ -1,0 +1,205 @@
+/* Map view — feature-scoped styles for the trip-detail map screen only.
+   Every rule is nested under .mapView so it cannot leak to Mapbox's own
+   injected DOM (canvas, controls, popups, markers), other routes, forms,
+   or modals. We never style anything inside the Mapbox container, and we
+   only reference existing design tokens (never redefine them). */
+
+.mapView {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  margin: 4px 0 2px;
+}
+
+/* ---------- Day summary bar (above the map, never overlapping it) ---------- */
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+.summaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.summaryKicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.summaryDate {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+.summaryCount {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.summaryPin { width: 15px; height: 15px; }
+
+/* ---------- Map container (stable size, never shrinks or overflows) ---------- */
+.mapShell {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+/* The element Mapbox mounts into. We size the wrapper only; we do NOT style
+   any Mapbox-generated descendants (canvas / controls / popups / markers). */
+.mapCanvas {
+  width: 100%;
+  height: 360px;
+}
+@media (min-width: 640px) {
+  .mapCanvas { height: 460px; }
+}
+
+/* ---------- Located-item list (easy to scan: order · time · title) ---------- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.listItem:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  border-color: #cfe0fb;
+  color: var(--ink);
+}
+.order {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--brand-grad);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.itemTime {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+.itemTitle {
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chevron {
+  flex: 0 0 auto;
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--muted);
+  border-right: 2px solid var(--muted);
+  transform: rotate(45deg);
+}
+
+/* ---------- Fallback card (keeps existing alert content, restyled shell) ---------- */
+.fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0 2px;
+  padding: 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.fallbackIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+.fallbackIcon svg { width: 24px; height: 24px; }
+.fallbackTitle {
+  margin: 4px 0 0;
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+.fallbackText {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.fallbackDetail {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  opacity: 0.8;
+  word-break: break-word;
+}
+.fallbackLink {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 9px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-grad);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(31, 111, 235, 0.24);
+}

@@ -8,6 +8,7 @@ import { getMarkerItems } from "@/features/map/selectors";
 import { getMapboxToken, isMapboxAvailable } from "@/features/map/mapbox-client";
 import { MapUnavailableState } from "@/features/map/components/MapUnavailableState";
 import type { ItineraryItem } from "@/types/domain";
+import styles from "@/features/map/components/map-view.module.css";
 
 export function MapView({ tripId, date, items }: { tripId: string; date: string; items: ItineraryItem[] }) {
   if (!isMapboxAvailable()) return <MapUnavailableState tripId={tripId} date={date} reason="地圖服務尚未設定" />;
@@ -87,5 +88,36 @@ function InteractiveMap({ tripId, date, markers }: { tripId: string; date: strin
   }, [markers, tripId]);
 
   if (failed) return <MapUnavailableState tripId={tripId} date={date} reason={reason} detail={detail} />;
-  return <section aria-label="地圖"><div ref={mapContainer} style={{ minHeight: 420 }} />{markers.map((marker) => <Link key={marker.id} href={`/trips/${tripId}/items/${marker.id}`}><span>{marker.order}. {marker.time} · {marker.title}</span></Link>)}</section>;
+  return (
+    <section className={styles.mapView} aria-label="地圖">
+      <div className={styles.summary}>
+        <div className={styles.summaryText}>
+          <p className={styles.summaryKicker}>地圖模式</p>
+          <p className={styles.summaryDate}>{date}</p>
+        </div>
+        <span className={styles.summaryCount}><PinIcon />{markers.length} 個定位行程</span>
+      </div>
+      <div className={styles.mapShell}>
+        <div ref={mapContainer} className={styles.mapCanvas} />
+      </div>
+      <ol className={styles.list}>
+        {markers.map((marker) => (
+          <li key={marker.id}>
+            <Link className={styles.listItem} href={`/trips/${tripId}/items/${marker.id}`}>
+              <span className={styles.order}>{marker.order}</span>
+              <span className={styles.itemBody}>
+                <span className={styles.itemTime}>{marker.time}</span>
+                <span className={styles.itemTitle}>{marker.title}</span>
+              </span>
+              <span className={styles.chevron} aria-hidden="true" />
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function PinIcon() {
+  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={styles.summaryPin}><path d="M12 21s6-5.4 6-10A6 6 0 0 0 6 11c0 4.6 6 10 6 10Z" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="11" r="2" stroke="currentColor" strokeWidth="1.8" /></svg>;
 }
