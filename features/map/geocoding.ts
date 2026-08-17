@@ -1,7 +1,5 @@
 "use client";
 
-import { getMapboxToken } from "@/features/map/mapbox-client";
-
 export type GeocodeResult = {
   id: string;
   name: string;
@@ -10,21 +8,17 @@ export type GeocodeResult = {
   longitude: number;
 };
 
-export async function searchPlaces(query: string): Promise<GeocodeResult[]> {
-  const token = getMapboxToken();
+// Delegates to /api/places/search so the provider (Google Places or Mapbox
+// fallback) is chosen server-side without exposing any provider-specific key
+// to the client.
+export async function searchPlaces(query: string, options?: { destination?: string }): Promise<GeocodeResult[]> {
   const trimmed = query.trim();
-  if (!token || !trimmed) return [];
-  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(trimmed)}.json?access_token=${token}&language=zh-Hant&limit=5`;
-  const response = await fetch(url);
+  if (!trimmed) return [];
+  const params = new URLSearchParams({ q: trimmed });
+  if (options?.destination) params.set("destination", options.destination);
+  const response = await fetch(`/api/places/search?${params.toString()}`);
   if (!response.ok) return [];
-  const data = (await response.json()) as {
-    features?: Array<{ id: string; text: string; place_name: string; center: [number, number] }>;
-  };
-  return (data.features ?? []).map((feature) => ({
-    id: feature.id,
-    name: feature.text,
-    placeName: feature.place_name,
-    latitude: feature.center[1],
-    longitude: feature.center[0],
-  }));
+  const data = (await response.json()) as { results?: GeocodeResult[] };
+  return data.results ?? [];
 }
+
