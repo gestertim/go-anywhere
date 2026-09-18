@@ -12,6 +12,8 @@ playwright/.auth/
 !.env.example
 .DS_Store
 Thumbs.db
+.github/
+.specify/
 .vscode/
 .idea/
 supabase/.temp/
